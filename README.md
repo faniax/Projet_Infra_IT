@@ -43,13 +43,7 @@ Remarque : **Attention à bien vous rappeler de vos Login/Password** lors de la 
 Voici une vidéo d'accompagnement pour vous aider dans cette séquence de création d'un site sur Alwaysdata : [Vidéo Alwaysdata](https://youtu.be/6cuHjy8n968)  
   
 **Procédure :**  
-1° - Créez votre compte Alwaysdata (gratuit jusqu'à 100Mo, aucune carte nécéssaire).  
-2° - Depuis la console d'administration (Le panel d'administration de Alwaysdata) :  
- . 2.1 - Cliquez sur "Sites" (Colonne de gauche) puis **supprimer votre site PHP** (via l'icone de la Poubelle).  
- . 2.2 - **Installer ensuite une application Flask** (Bouton **+ Installer une application**).  
- . . 2.2.1 Adresses = utilisez le sous-domaine qui vous appartient que vous trouverez dans l'information " Les sous-domaines suivants vous appartiennent et sont actuellement inutilisés : {Site}.alwaysdata.net  
- . . 2.2.2 Répertoire d'installation = **/www/flask**  
- . 2.2.3 N'oubliez pas d'Accepter les conditions.  
+Conservez votre site Alwaysdata existant (sous Flask).  
     
 **Travail demandé :** Mettre en ligne votre application Flask "Hello World !" et **copier l'URL de votre site dans la discussion public**.  
   
@@ -134,7 +128,7 @@ Pour accéder à cette fonctionnalité, l'utilisateur sera authentifié sous les
 Séquence 6 : Le projet de bibliothèque
 ---------------------------------------------------
 Objectif : Créer une application de biliothèque  
-Difficulté : Moyenne (~180 minutes)
+Difficulté : Moyenne (~3h)
 ---------------------------------------------------
 Votre projet consiste à present à concevoir et développer une application de gestion de bibliothèque moderne qui simplifie le processus de prêt et de retour de livres. Les fonctionnalités attendues dans le cadre de ce projet sont les suivantes :  
 •	L’enregistrement et la suppression de livres.  
