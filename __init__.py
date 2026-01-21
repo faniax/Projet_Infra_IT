@@ -109,6 +109,16 @@ def login():
 
     return render_template("formulaire_authentification.html")
 
+@app.route("/livres")
+def livres():
+    q = request.args.get("q", "")
+    cursor.execute(
+        "SELECT * FROM livres WHERE titre LIKE ?",
+        (f"%{q}%",)
+    )
+    livres = cursor.fetchall()
+    return render_template("read_data.html", livres=livres)
+
 
 
                                                                                                                                        
