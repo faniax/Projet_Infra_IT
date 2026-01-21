@@ -88,6 +88,9 @@ def fiche_nom():
 
 
 
+
+
+
 app.secret_key = "secret"
 
 @app.route("/login", methods=["GET", "POST"])
@@ -120,6 +123,48 @@ def livres():
     return render_template("read_data.html", livres=livres)
 
 
+
+
+@app.route("/ajouter_livre", methods=["GET", "POST"])
+def ajouter_livre():
+    if session.get("role") != "admin":
+        return "Accès interdit", 403
+
+    if request.method == "POST":
+        cursor.execute(
+            "INSERT INTO livres (titre, auteur, stock) VALUES (?, ?, ?)",
+            (
+                request.form["titre"],
+                request.form["auteur"],
+                request.form["stock"]
+            )
+        )
+        db.commit()
+        return redirect("/livres")
+
+    return render_template("ajouter_client.html")
+
+
+@app.route("/emprunter/<int:id>")
+def emprunter(id):
+    cursor.execute(
+        "INSERT INTO emprunts (user_id, livre_id) VALUES (?, ?)",
+        (session["user_id"], id)
+    )
+    cursor.execute(
+        "UPDATE livres SET stock = stock - 1 WHERE id=?",
+        (id,)
+    )
+    db.commit()
+    return redirect("/livres")
+
+
+from flask import jsonify
+
+@app.route("/api/livres")
+def api_livres():
+    cursor.execute("SELECT titre, auteur, stock FROM livres")
+    return jsonify(cursor.fetchall())
 
                                                                                                                                        
 if __name__ == "__main__":
