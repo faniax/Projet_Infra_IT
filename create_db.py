@@ -18,3 +18,10 @@ cur.execute("INSERT INTO clients (nom, prenom, adresse) VALUES (?, ?, ?)",('LEFE
 
 connection.commit()
 connection.close()
+
+INSERT INTO users (username, password, role)
+VALUES ('admin', 'admin123', 'admin');
+
+INSERT INTO users (username, password, role)
+VALUES ('user', '12345', 'user');
+
