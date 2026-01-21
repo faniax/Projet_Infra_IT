@@ -76,6 +76,18 @@ def enregistrer_client():
     conn.commit()
     conn.close()
     return redirect('/consultation/')  # Rediriger vers la page d'accueil après l'enregistrement
+
+
+@app.route("/fiche_nom", methods=["GET", "POST"])
+def fiche_nom():
+    auth = request.authorization
+    if not auth or auth.username != "user" or auth.password != "12345":
+        return ("Accès refusé", 401, {
+            'WWW-Authenticate': 'Basic realm="Login required"'
+        })
+
+    return render_template("fiche_nom.html")
+
                                                                                                                                        
 if __name__ == "__main__":
   app.run(debug=True)
