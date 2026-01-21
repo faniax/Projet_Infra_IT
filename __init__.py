@@ -8,6 +8,14 @@ import sqlite3
 app = Flask(__name__)                                                                                                                  
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'  # Clé secrète pour les sessions
 
+def get_db():
+    conn = sqlite3.connect("database.db")
+    conn.row_factory = sqlite3.Row
+    return conn
+conn = get_db()
+cursor = conn.cursor()
+
+
 # Fonction pour créer une clé "authentifie" dans la session utilisateur
 def est_authentifie():
     return session.get('authentifie')
@@ -78,20 +86,33 @@ def enregistrer_client():
     return redirect('/consultation/')  # Rediriger vers la page d'accueil après l'enregistrement
     
 
-
-
-app = Flask(__name__)
-
 @app.route("/fiche_nom", methods=["GET", "POST"])
 def fiche_nom():
-    return render_template("fiche_nom.html")
+    auth = request.authorization
+    if not auth or auth.username != "user" or auth.password != "12345":
+        return ("Accès refusé", 401, {
+            "WWW-Authenticate": 'Basic realm="Login requis"'
+        })
+
+    nom = request.form.get("nom")
+    data = []
+
+    if nom:
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT * FROM clients WHERE nom LIKE ?",
+            (f"%{nom}%",)
+        )
+        data = cursor.fetchall()
+
+    return render_template("fiche_nom.html", data=data)
 
 
 
 
 
 
-app.secret_key = "secret"
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -99,28 +120,30 @@ def login():
         user = request.form["username"]
         pwd = request.form["password"]
 
+        conn = get_db()
+        cursor = conn.cursor()
         cursor.execute(
-            "SELECT role FROM users WHERE username=? AND password=?",
+            "SELECT id, role FROM users WHERE username=? AND password=?",
             (user, pwd)
         )
         res = cursor.fetchone()
 
         if res:
-            session["user"] = user
-            session["role"] = res[0]
+            session["user_id"] = res["id"]
+            session["role"] = res["role"]
             return redirect("/livres")
 
     return render_template("formulaire_authentification.html")
 
+
 @app.route("/livres")
 def livres():
-    q = request.args.get("q", "")
-    cursor.execute(
-        "SELECT * FROM livres WHERE titre LIKE ?",
-        (f"%{q}%",)
-    )
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM livres")
     livres = cursor.fetchall()
     return render_template("read_data.html", livres=livres)
+
 
 
 
@@ -131,22 +154,23 @@ def ajouter_livre():
         return "Accès interdit", 403
 
     if request.method == "POST":
+        conn = get_db()
+        cursor = conn.cursor()
         cursor.execute(
             "INSERT INTO livres (titre, auteur, stock) VALUES (?, ?, ?)",
-            (
-                request.form["titre"],
-                request.form["auteur"],
-                request.form["stock"]
-            )
+            (request.form["titre"], request.form["auteur"], request.form["stock"])
         )
-        db.commit()
+        conn.commit()
         return redirect("/livres")
 
     return render_template("ajouter_client.html")
-
+render_template("ajouter_client.html")
 
 @app.route("/emprunter/<int:id>")
 def emprunter(id):
+    conn = get_db()
+    cursor = conn.cursor()
+
     cursor.execute(
         "INSERT INTO emprunts (user_id, livre_id) VALUES (?, ?)",
         (session["user_id"], id)
@@ -155,16 +179,18 @@ def emprunter(id):
         "UPDATE livres SET stock = stock - 1 WHERE id=?",
         (id,)
     )
-    db.commit()
+    conn.commit()
     return redirect("/livres")
 
 
-from flask import jsonify
 
 @app.route("/api/livres")
 def api_livres():
+    conn = get_db()
+    cursor = conn.cursor()
     cursor.execute("SELECT titre, auteur, stock FROM livres")
     return jsonify(cursor.fetchall())
+
 
                                                                                                                                        
 if __name__ == "__main__":
