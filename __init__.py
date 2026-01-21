@@ -78,15 +78,13 @@ def enregistrer_client():
     return redirect('/consultation/')  # Rediriger vers la page d'accueil après l'enregistrement
 
 
+
+app = Flask(__name__)
+
 @app.route("/fiche_nom", methods=["GET", "POST"])
 def fiche_nom():
-    auth = request.authorization
-    if not auth or auth.username != "user" or auth.password != "12345":
-        return ("Accès refusé", 401, {
-            'WWW-Authenticate': 'Basic realm="Login required"'
-        })
-
     return render_template("fiche_nom.html")
+
 
                                                                                                                                        
 if __name__ == "__main__":
