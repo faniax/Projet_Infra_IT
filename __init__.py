@@ -164,7 +164,6 @@ def ajouter_livre():
         return redirect("/livres")
 
     return render_template("ajouter_client.html")
-render_template("ajouter_client.html")
 
 @app.route("/emprunter/<int:id>")
 def emprunter(id):
