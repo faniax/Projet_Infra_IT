@@ -76,6 +76,7 @@ def enregistrer_client():
     conn.commit()
     conn.close()
     return redirect('/consultation/')  # Rediriger vers la page d'accueil après l'enregistrement
+    
 
 
 
@@ -84,6 +85,30 @@ app = Flask(__name__)
 @app.route("/fiche_nom", methods=["GET", "POST"])
 def fiche_nom():
     return render_template("fiche_nom.html")
+
+
+
+app.secret_key = "secret"
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        user = request.form["username"]
+        pwd = request.form["password"]
+
+        cursor.execute(
+            "SELECT role FROM users WHERE username=? AND password=?",
+            (user, pwd)
+        )
+        res = cursor.fetchone()
+
+        if res:
+            session["user"] = user
+            session["role"] = res[0]
+            return redirect("/livres")
+
+    return render_template("formulaire_authentification.html")
+
 
 
                                                                                                                                        
