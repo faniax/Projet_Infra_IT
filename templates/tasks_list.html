@@ -2,7 +2,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-
+<div class="container">
 <h2>Mes tâches</h2>
 
 {% for t in tasks %}
@@ -20,3 +20,4 @@
 {% endfor %}
 
 <a href="/tasks">Retour</a>
+</div>
