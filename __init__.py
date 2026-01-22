@@ -231,6 +231,26 @@ def list_tasks():
 
     return render_template("tasks_list.html", tasks=tasks)
 
+@app.route("/tasks/done/<int:id>")
+def task_done(id):
+    conn = get_tasks_db()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE tasks SET done = 1 WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+
+    return redirect("/tasks/list")
+
+@app.route("/tasks/delete/<int:id>")
+def delete_task(id):
+    conn = get_tasks_db()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM tasks WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+
+    return redirect("/tasks/list")
+
 
 
 
