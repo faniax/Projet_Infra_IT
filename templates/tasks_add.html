@@ -1,7 +1,7 @@
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
+<div class="container">
 <h2>Ajouter une tâche</h2>
 <form method="post">
     <input name="title" placeholder="Titre" required><br>
@@ -9,3 +9,4 @@
     <input type="date" name="due_date"><br>
     <button>Ajouter</button>
 </form>
+</div>
