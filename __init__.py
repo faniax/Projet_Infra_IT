@@ -191,6 +191,18 @@ def api_livres():
     return jsonify(cursor.fetchall())
 
 
+
+def get_tasks_db():
+    conn = sqlite3.connect("tasks.db")
+    conn.row_factory = sqlite3.Row
+    return conn
+
+@app.route("/tasks")
+def tasks_home():
+    return render_template("tasks_home.html")
+
+
+
                                                                                                                                        
 if __name__ == "__main__":
   app.run(debug=True)
