@@ -221,6 +221,17 @@ def add_task():
 
     return render_template("tasks_add.html")
 
+@app.route("/tasks/list")
+def list_tasks():
+    conn = get_tasks_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM tasks ORDER BY done, due_date")
+    tasks = cursor.fetchall()
+    conn.close()
+
+    return render_template("tasks_list.html", tasks=tasks)
+
+
 
 
 
