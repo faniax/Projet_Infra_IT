@@ -201,6 +201,27 @@ def get_tasks_db():
 def tasks_home():
     return render_template("tasks_home.html")
 
+@app.route("/tasks/add", methods=["GET", "POST"])
+def add_task():
+    if request.method == "POST":
+        title = request.form["title"]
+        description = request.form["description"]
+        due_date = request.form["due_date"]
+
+        conn = get_tasks_db()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO tasks (title, description, due_date) VALUES (?, ?, ?)",
+            (title, description, due_date)
+        )
+        conn.commit()
+        conn.close()
+
+        return redirect("/tasks/list")
+
+    return render_template("tasks_add.html")
+
+
 
 
                                                                                                                                        
