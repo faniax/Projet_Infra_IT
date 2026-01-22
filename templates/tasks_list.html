@@ -1,0 +1,17 @@
+<h2>Mes tâches</h2>
+
+{% for t in tasks %}
+<p>
+    {% if t.done %}
+        ✅ <s>{{ t.title }}</s>
+    {% else %}
+        ⏳ {{ t.title }}
+    {% endif %}
+    - {{ t.description }} ({{ t.due_date }})
+
+    <a href="/tasks/done/{{ t.id }}">Terminer</a>
+    <a href="/tasks/delete/{{ t.id }}">Supprimer</a>
+</p>
+{% endfor %}
+
+<a href="/tasks">Retour</a>
